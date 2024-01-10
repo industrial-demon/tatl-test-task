@@ -39,25 +39,32 @@ export const QuerySnackProvider = ({
     setOpenSnake(true);
   }, []);
 
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-    queryCache: new QueryCache({
-      onError: (_, query) => {
-        if (query.state.status === "error") {
-          setOpenSnake(true);
-        }
-      },
-    }),
-    mutationCache: new MutationCache({
-      onError: () => {
-        setOpenSnake(true);
-      },
-    }),
-  });
+  /*
+   
+   https://github.com/TkDodo/blog-comments/discussions/68#discussioncomment-6562714
+   */
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+        queryCache: new QueryCache({
+          onError: (_, query) => {
+            if (query.state.status === "error") {
+              setOpenSnake(true);
+            }
+          },
+        }),
+        mutationCache: new MutationCache({
+          onError: () => {
+            setOpenSnake(true);
+          },
+        }),
+      })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
